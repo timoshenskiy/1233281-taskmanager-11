@@ -62,4 +62,4 @@ const createFilterTemplate = () => {
   );
 };
 
-export { createFilterTemplate };
+export {createFilterTemplate};
