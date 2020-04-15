@@ -11,7 +11,7 @@ import {generateFilters} from "./mock/filter.js";
 import {render, RenderPosition} from "./utils.js";
 
 
-const TASK_COUNT = 0;
+const TASK_COUNT = 20;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
