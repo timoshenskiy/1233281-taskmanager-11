@@ -1,0 +1,10 @@
+{
+    "options": {
+        "linkNatives": "true",        
+        "attributesEmit": "true",
+        "selleck": "true",
+        "ignorePaths": [ "simpleyui" ],
+        "paths": "*/js",
+        "outdir": "../api-js"
+    }
+}

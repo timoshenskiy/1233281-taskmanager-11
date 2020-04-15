@@ -2,7 +2,7 @@ const filterTitles = [
   `all`, `overdue`, `today`, `favorites`, `repeating`, `archive`
 ];
 // Функция генерации массива объектов с фильтрами (поля title и count)
-const generateFilters = () => {
+export const generateFilters = () => {
   return filterTitles.map((it) => {
     return {
       title: it,
@@ -11,4 +11,4 @@ const generateFilters = () => {
   });
 };
 
-export {generateFilters};
+
