@@ -1,5 +1,5 @@
 import {COLORS, DAYS, MONTH_NAMES} from "../const.js";
-import {formatTime} from "../utils.js";
+import {createElement, formatTime} from "../utils.js";
 
 // Функция создания разметки цветов, с выбранным цветом (получаем из моков)
 const createColorsMarkup = (colors, currentColor) => {
@@ -46,7 +46,7 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
 };
 
 
-export const createTaskEditTemplate = (task) => {
+const createTaskEditTemplate = (task) => {
   const {description, dueDate, color, repeatingDays} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
@@ -89,8 +89,7 @@ export const createTaskEditTemplate = (task) => {
                   date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                 </button>
 
-                ${
-    isDateShowing ?
+                ${isDateShowing ?
       `<fieldset class="card__date-deadline">
                       <label class="card__input-deadline-wrap">
                         <input
@@ -101,23 +100,18 @@ export const createTaskEditTemplate = (task) => {
                           value="${date} ${time}"
                         />
                       </label>
-                    </fieldset>`
-      : ``
-    }
+                    </fieldset>` : ``}
 
                 <button class="card__repeat-toggle" type="button">
                   repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                 </button>
 
-                  ${
-    isRepeatingTask ?
+                  ${isRepeatingTask ?
       `<fieldset class="card__repeat-days">
                       <div class="card__repeat-days-inner">
                         ${repeatingDaysMarkup}
                       </div>
-                    </fieldset>`
-      : ``
-    }
+                    </fieldset>` : ``}
               </div>
             </div>
 
@@ -138,3 +132,26 @@ export const createTaskEditTemplate = (task) => {
     </article>`
   );
 };
+
+export default class TaskForm {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
