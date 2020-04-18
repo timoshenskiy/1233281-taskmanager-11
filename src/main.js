@@ -1,7 +1,7 @@
 import BoardComponent from "./components/board.js";
 import BoardController from "./controllers/board.js";
 import FilterComponent from "./components/filter.js";
-import SiteMenuComponent from "./components/menu.js";
+import MenuComponent from "./components/menu.js";
 import {generateTasks} from "./mock/task.js";
 import {generateFilters} from "./mock/filter.js";
 import {render, RenderPosition} from "./utils/render.js";
@@ -15,7 +15,7 @@ const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 const tasks = generateTasks(TASK_COUNT);
 const filters = generateFilters();
 
-render(siteHeaderElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new MenuComponent(), RenderPosition.BEFOREEND);
 render(siteMainElement, new FilterComponent(filters), RenderPosition.BEFOREEND);
 
 const boardComponent = new BoardComponent();

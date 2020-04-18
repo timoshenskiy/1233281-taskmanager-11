@@ -134,7 +134,7 @@ const createTaskEditTemplate = (task) => {
   );
 };
 
-export default class TaskEdit extends AbstractComponent {
+export default class TaskForm extends AbstractComponent {
   constructor(task) {
     super();
 
