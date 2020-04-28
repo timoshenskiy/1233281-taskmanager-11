@@ -1,6 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {COLORS, DAYS} from "../const.js";
-import {formatDate, formatTime} from "../utils/common.js";
+import {formatDate, formatTime, compareDates} from "../utils/common.js";
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
 
 const isRepeating = (repeatingDays) => {
   return Object.values(repeatingDays).some(Boolean);
@@ -53,7 +56,7 @@ const createTaskFormTemplate = (task, options = {}) => {
   const {description} = task;
   const {isDateShowing, isRepeatingTask, activeRepeatingDays, color, dueDate} = options;
 
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  const isExpired = compareDates(dueDate, Date.now());
 
   const isBlockSaveButton = (isDateShowing && isRepeatingTask) ||
     (isRepeatingTask && !isRepeating(activeRepeatingDays)) || isDateShowing && !dueDate;
@@ -139,9 +142,10 @@ export default class TaskForm extends AbstractSmartComponent {
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
     this._activeColor = task.color;
+    this._flatpickr = null;
     this._submitHandler = null;
 
-
+    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -163,6 +167,8 @@ export default class TaskForm extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+
+    this._applyFlatpickr();
   }
 
   reset() {
@@ -174,6 +180,25 @@ export default class TaskForm extends AbstractSmartComponent {
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
 
     this.rerender();
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    if (this._isDateShowing) {
+      const dateElement = this.getElement().querySelector(`.card__date`);
+      this._flatpickr = flatpickr(dateElement, {
+        altInput: true,
+        altFormat: `d M H:i`,
+        allowInput: true,
+        enableTime: true,
+        dateFormat: `M-d-Y H:i`,
+        defaultDate: this._dueDate || `today`,
+      });
+    }
   }
 
   setSubmitHandler(handler) {
@@ -211,15 +236,11 @@ export default class TaskForm extends AbstractSmartComponent {
     if (this._isDateShowing) {
       element.querySelector(`.card__date`)
       .addEventListener(`input`, (evt) => {
-        // Т.к. в инпут пользователь вводит строку,а не дату,
-        // чтобы не вызывать ошибок связанных с форматом данных, я сделал заглушку
         if (evt.target.value.length > 0) {
-          this._dueDate = new Date();
+          this._dueDate = new Date(evt.target.value);
         } else {
           this._dueDate = null;
         }
-
-
         this.rerender();
       });
 
