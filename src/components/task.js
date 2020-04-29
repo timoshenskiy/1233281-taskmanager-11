@@ -1,5 +1,6 @@
-import {formatTime, formatDate} from "../utils/common.js";
+import {formatTime, formatDate, isOverdueDate} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
+import {encode} from "he";
 
 const createButtonMarkup = (name, isActive = true) => {
   return (
@@ -13,14 +14,15 @@ const createButtonMarkup = (name, isActive = true) => {
 };
 
 const createTaskTemplate = (task) => {
-  const {description, dueDate, color, repeatingDays} = task;
+  const {description: notSanitizedDescription, dueDate, color, repeatingDays} = task;
   // Проверка на просрочку
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
   // Интерпретация в булевое значение
   const isDateShowing = !!dueDate;
   // Форматирование даты
   const date = isDateShowing ? formatDate(dueDate) : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
+  const description = encode(notSanitizedDescription);
   // Опредление повторямости
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   // Проверка просрочки
