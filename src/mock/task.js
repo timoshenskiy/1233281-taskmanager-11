@@ -29,9 +29,7 @@ const getRandomIntegerNumber = (min, max) => {
 
 const getRandomDate = () => {
   const targetDate = new Date();
-  // Отклонение даты от текущей в большую или в меньшую сторону
   const sign = Math.random() > 0.5 ? 1 : -1;
-  // Величина отклонения
   const diffValue = sign * getRandomIntegerNumber(0, 8);
 
   targetDate.setDate(targetDate.getDate() + diffValue);
@@ -46,13 +44,12 @@ const generateRepeatingDays = () => {
 };
 
 const generateTask = () => {
-  // Конструкция для получения случайной даты или null
   const dueDate = Math.random() > 0.5 ? null : getRandomDate();
 
   return {
+    id: String(new Date() + Math.random()),
     description: getRandomArrayItem(DescriptionItems),
     dueDate,
-    // Если есть дедлайн, то без повторений. В обратном случае с 50% шансом
     repeatingDays: dueDate ? DefaultRepeatingDays : generateRepeatingDays(),
     color: getRandomArrayItem(COLORS),
     isArchive: Math.random() > 0.5,
