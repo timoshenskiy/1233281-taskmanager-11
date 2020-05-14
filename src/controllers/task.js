@@ -10,6 +10,8 @@ export const Mode = {
   EDIT: `edit`,
 };
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const EmptyTask = {
   description: ``,
   dueDate: null,
@@ -150,5 +152,14 @@ export default class TaskController {
       this._replaceEditToTask();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
+  }
+  shake() {
+    this._taskFormComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._taskComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._taskFormComponent.getElement().style.animation = ``;
+      this._taskComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 }
